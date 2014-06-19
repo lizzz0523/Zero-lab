@@ -114,6 +114,8 @@ var SVG = B.View.extend({
 				}
 			};
 
+			this.disabled = false;
+
 			this.bindEvent();
 			this.enable();
 		},
@@ -125,11 +127,13 @@ var SVG = B.View.extend({
 		enable : function() {
 			// 重新开通按钮功能
 			this.$btn.prop('disabled', false);
+			this.disabled = false;
 		},
 
 		disable : function() {
 			// 暂时关闭按钮功能
 			this.$btn.prop('disabled', true);
+			this.disabled = true;
 		},
 
 		enter : function(name) {
@@ -210,7 +214,10 @@ var SVG = B.View.extend({
 
 		buttonClick : function(event) {
 			event && event.preventDefault();
-			this.submit();
+
+			if (!this.disabled) {
+				this.submit();
+			}
 		}
 	}, {
 		STATUS_TIME : 1500,
