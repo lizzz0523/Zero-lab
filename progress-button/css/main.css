@@ -1,0 +1,138 @@
+h1, h2 {
+    font-family: Arial;
+    text-align: center;
+}
+
+h1 {
+    padding-top: 30px;
+    line-height: 60px;
+    color: #333;
+    font-size: 35px;
+}
+
+h2 {
+    padding-bottom: 30px;
+    line-height: 30px;
+    color: #aaa;
+    font-size: 25px;
+}
+
+.button-set {
+    text-align: center;
+}
+
+.progress-button {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+}
+
+.progress-button button {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    border: 2px solid #1ecd97;
+    width: 250px;
+    height: 70px;
+    border-radius: 40px;
+    background: transparent;
+    color: #1ecd97;
+    letter-spacing: 1px;
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+
+    -webkit-transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
+            transition: background-color 0.3s, color 0.3s, width 0.3s, border-width 0.3s, border-color 0.3s;
+}
+
+.progress-button button:active {
+    background-color: #1ecd97;
+    color: #fff;
+}
+
+.progress-button button:focus {
+    outline: none;
+}
+
+.loading.progress-button button {
+    /* 缩小宽度，让按钮成圆形 */
+    width: 70px;
+    border-width: 5px;
+    border-color: #ddd;
+    background-color: transparent;
+    color: #fff;
+}
+
+.success.progress-button button,
+.error.progress-button button {
+    -webkit-transition: background-color 0.3s, width 0.3s, border-width 0.3s;
+            transition: background-color 0.3s, width 0.3s, border-width 0.3s;
+}
+
+.success.progress-button button {
+    border-color: #1ecd97;
+    background-color: #1ecd97;
+}
+ 
+.error.progress-button button {
+    border-color: #fb797e;
+    background-color: #fb797e;
+}
+
+.progress-button span {
+    -webkit-transition: opacity 0.3s 0.1s;
+            transition: opacity 0.3s 0.1s;
+}
+
+.loading.progress-button span,
+.success.progress-button span,
+.error.progress-button span {
+    /* 文字在loading，success，error三个状态下都需要隐藏 */
+    opacity: 0;
+}
+
+.loading.progress-button span {
+    -webkit-transition: opacity 0.15s;
+            transition: opacity 0.15s;
+}
+
+.progress-button svg {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    /* pointer-events属性用于忽略svg对底层元素的覆盖 */
+    pointer-events: none;
+
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+
+.progress-button svg path {
+    /* 设置隐藏所有path */
+    opacity: 0;
+    fill: none;
+}
+
+.progress-button svg.progress-circle path {
+    stroke: #1ecd97;
+    stroke-width: 5;
+}
+
+.progress-button svg.checkmark path,
+.progress-button svg.cross path {
+    stroke: #fff;
+    /* stroke-linecap属性用于设置路径连接处的样式 */
+    stroke-linecap: round;
+    stroke-width: 4;
+    -webkit-transition: opacity 0.1s;
+            transition: opacity 0.1s;
+}
+
+.loading.progress-button svg.progress-circle path,
+.success.progress-button svg.checkmark path,
+.error.progress-button svg.cross path {
+    opacity: 1;
+    -webkit-transition: stroke-dashoffset 0.3s;
+            transition: stroke-dashoffset 0.3s;
+}

@@ -1,0 +1,107 @@
+/*
+    common.css是用于保存一些常用的样式，
+    如果你需要在html中使用这些样式
+    直接在标签class属性上添加样式对应的名称即可
+
+    例如你需要清除浮动
+
+    <div class="cfx">
+        ...
+    </div>
+*/
+
+/*
+    .cfx 清除浮动
+    .row 分行结构
+*/
+.cfx, .row {
+    +zoom: 1;
+}
+
+.cfx:after, .row:after {
+    content: "";
+    display: block;
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+    clear: both;
+    font-size: 0;
+    visibility: hidden;
+}
+
+/*
+    .hide 隐藏元素
+*/
+.hide {
+    display: none;
+}
+
+/*
+    .hitx 隐藏文字
+*/
+.hitx {
+    text-indent: -9999em;
+}
+
+/*
+    .ac 自动居中
+*/
+.ac {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*
+    .ac-950 自动居中，并且设置宽度为950px
+*/
+.ac-950 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 950px;
+}
+
+/*
+    .ac-960 自动居中，并且设置宽度为960px
+*/
+.ac-960 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+}
+
+/*
+    .ac-1000 自动居中，并且设置宽度为1000px
+*/
+.ac-1000 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+}
+
+/*
+    .footer 页脚的样式，已经添加到模板内
+*/
+.footer {
+    margin-top: 10px;
+    border-bottom: 1px solid #666;
+    color: #535353;
+    font-size: 13px;
+}
+
+.footer p {
+    line-height: 30px;
+}
+
+.footer .title {
+    padding-left: 10px;
+    float: left;
+}
+
+.footer .copywriting {
+    padding-right: 10px;
+    float: right;
+}
+
+.footer .copywriting span {
+    padding-left: 10px;
+}

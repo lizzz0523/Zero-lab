@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Progress Button</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no" name="format-detection">
+
+<link rel="stylesheet" href="../css/reset.css" />
+<link rel="stylesheet" href="../css/common.css" />
+<link rel="stylesheet" href="css/main.css">
+
+<script src="js/modernizr.custom.js"></script>
+
+</head>
+<body>
+
+<div class="canvas">
+    <h1>Progress Button</h1>
+    <h2>by zero</h2>
+    <div class="row">
+
+        <div class="button-set">
+
+            <!-- 进度按钮 开始 -->
+            <div class="progress-button">
+
+                <!-- 按钮部分 -->
+                <button><span>Submit</span></button>
+
+                <!-- SVG圆形进度条 -->
+                <svg class="progress-circle" width="70" height="70">
+                    <path d="m35,2.5c17.955803,0 32.5,14.544199 32.5,32.5c0,17.955803 -14.544197,32.5 -32.5,32.5c-17.955803,0 -32.5,-14.544197 -32.5,-32.5c0,-17.955801 14.544197,-32.5 32.5,-32.5z"/>
+                </svg>
+
+                <!-- 打钩icon -->
+                <svg class="checkmark" width="70" height="70">
+                    <path d="m31.5,46.5l15.3,-23.2"/>
+                    <path d="m31.5,46.5l-8.5,-7.1"/>
+                </svg>
+
+                <!-- 打叉icon -->
+                <svg class="cross" width="70" height="70">
+                    <path d="m35,35l-9.3,-9.3"/>
+                    <path d="m35,35l9.3,9.3"/>
+                    <path d="m35,35l-9.3,9.3"/>
+                    <path d="m35,35l9.3,-9.3"/>
+                </svg>
+             
+            </div>
+            <!-- 进度按钮 结束 -->
+
+            <!-- 进度按钮 开始 -->
+            <div class="progress-button">
+
+                <!-- 按钮部分 -->
+                <button><span>Submit</span></button>
+
+                <!-- 圆形进度条 -->
+                <svg class="progress-circle" width="70" height="70">
+                    <path d="m35,2.5c17.955803,0 32.5,14.544199 32.5,32.5c0,17.955803 -14.544197,32.5 -32.5,32.5c-17.955803,0 -32.5,-14.544197 -32.5,-32.5c0,-17.955801 14.544197,-32.5 32.5,-32.5z"/>
+                </svg>
+
+                <!-- 打钩icon -->
+                <svg class="checkmark" width="70" height="70">
+                    <path d="m31.5,46.5l15.3,-23.2"/>
+                    <path d="m31.5,46.5l-8.5,-7.1"/>
+                </svg>
+
+                <!-- 打叉icon -->
+                <svg class="cross" width="70" height="70">
+                    <path d="m35,35l-9.3,-9.3"/>
+                    <path d="m35,35l9.3,9.3"/>
+                    <path d="m35,35l-9.3,9.3"/>
+                    <path d="m35,35l9.3,-9.3"/>
+                </svg>
+             
+            </div>
+            <!-- 进度按钮 结束 -->
+            
+        </div>
+
+    </div>
+</div>
+
+<script src="../js/jquery-1.8.2.min.js"></script>
+<script src="../js/plugin/jquery.hammer.min.js"></script>
+
+<script src="../js/underscore-min.js"></script>
+<script src="../js/backbone-min.js"></script>
+
+<script src="js/ProgressButton.js"></script>
+
+<script>
+    $('.progress-button').each(function(index, btn) {
+        var progressBtn = new ProgressButton({
+                el : btn
+            });
+
+        progressBtn.on('submit', function() {
+            var progress = 0,
+                self = this,
+                timer;
+
+            timer = setInterval(function() {
+                progress = Math.min(progress + Math.random() * 0.1, 1);
+                self.setProgress(progress);
+
+                if (progress === 1) {
+                    self.complete(index === 1 || index === 3 ? -1 : 1);
+                    clearInterval(timer);
+                }
+            }, 150);
+        });
+    } );
+</script>
+</body>
+</html>
