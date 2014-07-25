@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>Bubble-Form</title>
+<style>
+    @-webkit-keyframes 'fade' {
+        from {
+            opacity: 0;
+            -webkit-transform: translateY(10px);
+                    transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+                    transform: translateY(0);
+        }
+    }
+
+    @keyframes 'fade' {
+        from {
+            opacity: 0;
+            -webkit-transform: translateY(10px);
+                    transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+                    transform: translateY(0);
+        }
+    }
+
+    * {
+        margin: 0;
+        padding: 0; 
+    }
+
+    body {
+        padding-top: 20px;
+        font-family: "Microsoft YaHei";
+        font-size: 13px;
+    }
+
+    .intro {
+        padding-bottom: 20px;
+        color: #666;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .intro strong {
+        font-weight: bold;
+    }
+
+    .bubble-form {
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        width: 250px;
+    }
+
+    .bubble-form form {
+        padding: 10px;
+        height: 412px;
+    }
+
+    .bubble-form span {
+        position: relative;
+        display: block;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 3px;
+        color: #333;
+        -webkit-animation: 'fade' 0.5s ease;
+    }
+
+    .bubble-form span:last-of-type {
+        margin-bottom: 0;
+    }
+
+    .bubble-form span:after {
+        content: '';
+        position: absolute;
+        display: block;
+        border: 4px solid transparent;
+        width: 0;
+        line-height: 0;
+        font-size: 0;
+    }
+
+    .bubble-form .from {
+        margin-right: 20px;
+        background: #ccc;
+    }
+
+    .bubble-form .from:after{
+        top: -8px;
+        left: 10px;
+        border-bottom-color: #ccc;
+    }
+
+    .bubble-form .to {
+        margin-left: 20px;
+        background: #aaa;
+    }
+
+    .bubble-form .to:after{
+        bottom: -8px;
+        right: 10px;
+        border-top-color: #aaa;
+    }
+
+    .bubble-form .tips {
+        margin-left: 0;
+        margin-right: 0; 
+        background: #c00;
+        color: white;
+    }
+
+    .bubble-form .tips:after {
+        content: none;
+    }
+    
+    .input-form {
+        margin: 0 auto;
+        padding: 10px; 
+        width: 252px;
+    }
+    
+    .input-form span {
+        display: block;
+        overflow: hidden;
+    }
+
+    .input-form input {
+        display: block;
+        margin: 0;
+        padding: 2px 4px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        outline: none;
+        width: 190px;
+        height: 19px;
+        line-height: 19px;
+        float: left;
+    }
+
+    .input-form button {
+        display: block;
+        margin: 0 0 0 6px;
+        padding: 0;
+        border: none;
+        border-radius: 2px;
+        outline: none;
+        width: 46px;
+        height: 25px;
+        float: left;
+        background: #333;
+        color: white;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    .input-form .tips {
+        line-height: 30px;
+        color: #666;
+        text-indent: 4px;
+        font-size: 12px;
+    }
+
+    .input-form .tips strong {
+        color: #c00;
+        font-weight: normal;
+    }
+</style>
+</head>
+<body>
+<p class="intro">为了能成功报名我们的活动，希望亲能认真的回答我们以下 <strong>3个问题</strong> 哦！</p>
+<div class="bubble-form">
+    <form id="bubble-form">
+        <span class="from"><label for="name">您的名字是？</label></span>
+        <span class="from"><label for="city">您的来自哪个城市？</label></span>
+        <span class="from"><label for="favor">您的对大众的那款车特别感兴趣呢？</label></span>
+        <span class="from tips">恭喜您报名成功！</span>
+    </form>
+</div>
+<div class="input-form">
+    <form>
+        <span><input id="input" type="text" /><button id="btn">sent</button></span>
+        <span class="tips">*按 <strong>回车键</strong> 也可以哦亲！</span>
+    </form>
+</div>
+<script type="text/javascript">
+    var step = -1;
+    var focused = false;
+    var answer = [
+        '<span class="to">',
+            '<input type="hidden" name="{name}" value="{value}" />{value}',
+        '</span>'
+    ].join('');
+
+    var input = document.querySelector('#input');
+    var btn = document.querySelector('#btn');
+
+    var form = document.querySelector('#bubble-form');
+    var steps =  form.querySelectorAll('.from');
+
+    for(var i = 0; i < steps.length; i++){
+        steps[i].style.display = 'none';
+    }
+
+    function submit(){
+        var opts = {};
+
+        if(step >= steps.length){
+            alert('谢谢您的报名哦，亲');
+            return false;
+        }
+
+        opts.value = input.value;
+        if(opts.value === ''){
+            alert('亲，不能告诉我嘛可怜%>_<%');
+            return false;
+        }
+
+        opts.name = steps[step].querySelector('label').getAttribute('for');
+        opts.fragment = document.createDocumentFragment();
+
+        opts.fragment.appendChild((function(){
+            var div = document.createElement('DIV');
+            div.innerHTML = answer.replace(/\{([^{}]*)\}/g, function(a, b){
+                return opts[b];
+            });
+
+            return div.lastChild;
+        })());
+
+        if(steps[step].nextSibling){
+            form.insertBefore(opts.fragment, steps[step].nextSibling);
+        }else{
+            form.appendChild(opts.fragment);
+        }
+
+        input.value = '';
+
+        setTimeout(next, 1000);
+
+        return false;
+    }
+
+    function next(){
+        step++;
+        steps[step].style.display = 'block';
+    }
+
+    next();
+
+    input.onfocus = function(){
+        focused = true;
+    }
+
+    input.onblur = function(){
+        focused = false;
+    }
+
+    btn.onclick = submit;
+    document.onkeydown = function(event){
+        if(focused && event.keyCode == 13){
+            submit();
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</body>
+</html>
