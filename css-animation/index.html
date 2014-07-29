@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        @-webkit-keyframes rotate {
+            0% {
+                -webkit-transform: translate(0px, 100px) rotate(0deg) translate(0px, -100px) rotate(0deg);
+                background-color:red;
+            }  
+            13% {
+                -webkit-transform: translate(0px, 100px) rotate(45deg) translate(0px, -100px) rotate(-45deg);
+            }
+            25% {
+                -webkit-transform: translate(0px, 100px) rotate(90deg) translate(0px, -100px) rotate(-90deg);
+            }
+            38% {
+                -webkit-transform: translate(0px, 100px) rotate(135deg) translate(0px, -100px) rotate(-135deg);
+            }
+            50% {
+                -webkit-transform: translate(0px, 100px) rotate(180deg) translate(0px, -100px) rotate(-180deg);
+            }
+            63% {
+                -webkit-transform: translate(0px, 100px) rotate(225deg) translate(0px, -100px) rotate(-225deg);
+            }
+            75% {
+                -webkit-transform: translate(0px, 100px) rotate(270deg) translate(0px, -100px) rotate(-270deg);
+            }
+            88% {
+                -webkit-transform: translate(0px, 100px) rotate(315deg) translate(0px, -100px) rotate(-315deg);
+            }
+            100% {
+                -webkit-transform: translate(0px, 100px) rotate(360deg) translate(0px, -100px) rotate(-360deg);
+            }
+        }
+        .anim_display {
+            position: relative;
+            border: 1px solid #e2e2e2;
+            width: 500px;
+            height: 500px;
+        }
+        .anim_display .circle {
+            position:absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -125px;
+            margin-left: -25px;
+            height: 50px;
+            width: 50px;
+            border-radius: 100%;
+            background-color: teal;
+
+            -webkit-animation-duration: 4s;
+            -webkit-animation-timing-function: linear;
+            -webkit-animation-name: "rotate";
+            -webkit-animation-iteration-count: infinite;
+        }
+        .anim_reset {
+            padding: 10px;
+        }
+        .anim_reset button {
+            display: block;
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+            width: 100px;
+            height: 40px;
+            color: white;
+            background: none;
+            background-image: -webkit-linear-gradient(top, #333, #666);
+            cursor: pointer;
+        }
+        .anim_reset button:hover {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="anim_reset">
+        <button id="reset">Reset</button>
+    </div>
+    <div class="anim_display">
+        <div id="circle" class="circle"></div>
+    </div>
+    <script>
+        var button = document.querySelector('#reset'),
+            circle = document.querySelector('#circle'),
+
+            toggle = true,
+
+            totalTime = 4 * 1000,
+            startTime = Date.now(),
+
+            totalFrame = 100,
+            startFrame = 0;
+
+        function findKeyFrames(name) {
+            var styleSheets = document.styleSheets,
+                cssRules,
+                i = 0,
+                j,
+                len;
+
+            for (; i < styleSheets.length; i++) {
+                cssRules = styleSheets[i].cssRules;
+                j = -1;
+                len = cssRules.length;
+                
+                while (++j < len) {
+                    if (cssRules[j].type == window.CSSRule.WEBKIT_KEYFRAMES_RULE && cssRules[j].name == name) return cssRules[j]
+                }
+            }
+        }
+
+        function changeKeyFrames(name, startAngle) {
+            var keyframes = findKeyFrames(name),
+                rules = {},
+                key,
+                value,
+                i = -1,
+                len = keyframes.cssRules.length;
+
+            while (++i < len) {
+                key = keyframes.cssRules[0].keyText;
+                value = keyframes.cssRules[0].cssText.replace(/rotate\(\-?\d{1,3}deg\)/g, function(rule, index) {
+                    return 'rotate(' + (index > 50 ? '-' : '') + (startAngle + i * 45) + 'deg)';
+                });
+
+                rules[key] = value;
+                keyframes.deleteRule(key);
+            }
+
+            for (key in rules) {
+                keyframes.insertRule(rules[key]);
+            }
+
+            circle.style.webkitAnimationName = name;
+            circle.style.visibility = 'visible';
+        }
+
+        function pause () {
+            var diffTime,
+                style;
+
+            diffTime = Date.now() - startTime;
+
+            startFrame += (diffTime % totalTime) / totalTime * totalFrame;
+            startFrame %= totalFrame;
+
+            style = window.getComputedStyle(circle);
+
+            circle.style.webkitTransform = style.getPropertyValue('-webkit-transform');
+            circle.style.background = style.getPropertyValue('background');
+            circle.style.webkitAnimationName = 'none';
+        }
+
+        function play () {
+            startTime = Date.now();
+
+            changeKeyFrames('rotate', Math.floor(startFrame * 3.6));
+
+            circle.style.webkitTransform = '';
+            circle.style.background = '';
+            circle.style.webkitAnimationName = 'rotate';
+
+            return false;
+        }
+
+        button.onclick = function() {
+            if (toggle) {
+                pause();
+            } else {
+                play();
+            }
+
+            toggle = !toggle;
+
+            return false;
+        }
+    </script>
+</body>
+</html>
