@@ -1,0 +1,13 @@
+{
+  "name": "Zero-LAB",
+  "version": "1.0.0",
+  "description": "UI-effect lab",
+  "author": {
+    "name": "Liz Chow",
+    "url": "http://lizzz0523.github.io/"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.10.7"
+  }
+}

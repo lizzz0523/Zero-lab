@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>iscroll</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+    }
+
+    html {
+        overflow: visible;
+    }
+
+    body {
+        position: relative;
+        overflow: hidden;
+        font-family: "Hiragino Sans GB", Arial, "Microsoft YaHei";
+    }
+
+    header {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        min-height: 50px;
+        line-height: 50px;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+
+        background: -webkit-linear-gradient( #F45D68, #E54646);
+        background:         linear-gradient( #F45D68, #E54646);
+    }
+
+    header h1 {
+        padding: 0 10px;
+        color: white;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    }
+
+    .content {
+        padding-top: 50px; 
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    .scrollbar {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        border-radius: 4px;
+        width: 4px;
+        background-color: rgba(0,0,0,0.8);
+        opacity: 0;
+        
+        -webkit-transition: opacity 0.3s ease;
+                transition: opacity 0.3s ease;
+    }
+
+    .scrollbar.active {
+        opacity: 1;
+    }
+</style>
+</head>
+<body>
+<header>
+    <h1>scroll-top: <span id="top"></span></h1>
+</header>
+<div class="content">
+<div class="wrapper">
+    <div class="scroller">
+        <p>abc1</p>
+        <p>abc2</p>
+        <p>abc3</p>
+        <p>abc4</p>
+        <p>abc5</p>
+        <p>abc6</p>
+        <p>abc7</p>
+        <p>abc8</p>
+        <p>abc9</p>
+        <p>abc10</p>
+        <p>abc11</p>
+        <p>abc12</p>
+        <p>abc13</p>
+        <p>abc14</p>
+        <p>abc15</p>
+        <p>abc16</p>
+        <p>abc17</p>
+        <p>abc18</p>
+        <p>abc19</p>
+        <p>abc20</p>
+        <p>abc21</p>
+        <p>abc22</p>
+        <p>abc23</p>
+        <p>abc24</p>
+        <p>abc25</p>
+        <p>abc26</p>
+        <p>abc27</p>
+        <p>abc28</p>
+        <p>abc29</p>
+        <p>abc30</p>
+        <p>abc31</p>
+        <p>abc32</p>
+        <p>abc33</p>
+        <p>abc34</p>
+        <p>abc35</p>
+        <p>abc36</p>
+        <p>abc37</p>
+        <p>abc38</p>
+        <p>abc39</p>
+        <p>abc40</p>
+        <p>abc41</p>
+        <p>abc42</p>
+        <p>abc43</p>
+        <p>abc44</p>
+        <p>abc45</p>
+        <p>abc46</p>
+        <p>abc47</p>
+        <p>abc48</p>
+        <p>abc49</p>
+        <p>abc50</p>
+        <p>abc51</p>
+        <p>abc52</p>
+        <p>abc53</p>
+        <p>abc54</p>
+        <p>abc55</p>
+        <p>abc56</p>
+        <p>abc57</p>
+        <p>abc58</p>
+        <p>abc59</p>
+        <p>abc60</p>
+        <p>abc61</p>
+        <p>abc62</p>
+        <p>abc63</p>
+        <p>abc64</p>
+        <p>abc65</p>
+        <p>abc66</p>
+        <p>abc67</p>
+        <p>abc68</p>
+        <p>abc69</p>
+        <p>abc70</p>
+        <p>abc71</p>
+        <p>abc72</p>
+        <p>abc73</p>
+        <p>abc74</p>
+        <p>abc75</p>
+        <p>abc76</p>
+        <p>abc77</p>
+        <p>abc78</p>
+        <p>abc79</p>
+        <p>abc80</p>
+        <p>abc81</p>
+        <p>abc82</p>
+        <p>abc83</p>
+        <p>abc84</p>
+        <p>abc85</p>
+        <p>abc86</p>
+        <p>abc87</p>
+        <p>abc88</p>
+        <p>abc89</p>
+        <p>abc90</p>
+        <p>abc91</p>
+        <p>abc92</p>
+        <p>abc93</p>
+        <p>abc94</p>
+        <p>abc95</p>
+        <p>abc96</p>
+        <p>abc97</p>
+        <p>abc98</p>
+        <p>abc99</p>
+        <p>abc100</p>
+    </div>
+</div>
+</div>
+<script>
+    var body = document.body,
+        topbar = document.querySelector('span#top'),
+
+        wrapper = document.querySelector('.wrapper'),
+        scroller = document.querySelector('.scroller'),
+        scrollbar = document.createElement('div'),
+
+        touch = {
+            touching : false
+        },
+
+        prefix = (function() {
+            var elem = document.createElement('div'),
+                elemStyle = elem.style,
+
+                vendor = ['', '-webkit-', '-moz-', '-ms-', '-o-'],
+                prefix,
+                i = -1,
+                len = vendor.length;
+
+            while (++i < len) {
+                prefix = vendor[i];
+                if ((prefix + 'transform') in elemStyle) {
+                    break;
+                }
+            }
+
+            return prefix;
+        })(),
+        transform = prefix + 'transform',
+        transformStyle = prefix + 'transform-style';
+
+    var isArray = Array.isArray || function(obj) {
+            return Object.prototype.toString.call(obj) === '[object Array]';
+        },
+
+        isObject = function(obj) {
+            return Object.prototype.toString.call(obj) === '[object Object]';
+        },
+
+        has = function(obj, prop) {
+            return Object.prototype.hasOwnProperty.call(obj, prop);
+        },
+
+        keys = function(obj) {
+            var keys = [],
+                key;
+
+            if (!isObject(obj)) {
+                return keys;
+            }
+
+            if (Object.keys) {
+                return Object.keys(obj);
+            } else {
+                for (key in obj) {
+                    if (has(obj, key)) {
+                        keys.push(key);
+                    }
+                }
+                
+                return keys;
+            }
+        },
+
+        each = function(obj, fn) {
+            var props,
+                prop,
+                i = -1,
+                len;
+
+            if (isArray(obj)) {
+                len = obj.length;
+                while (++i < len) {
+                    if (fn.call(obj[i], obj[i], i, obj) === false) break;
+                }
+            } else {
+                props = keys(obj);
+                len = props.length;
+                while (++i < len) {
+                    prop = props[i];
+                    if (fn.call(obj[prop], obj[prop], prop, obj) === false) break;
+                }
+            }
+        },
+
+        getStyle = function(el, name) {
+            var style = window.getComputedStyle(el, null);
+            return style[name];
+        },
+
+        setStyle = function(el, name, value) {
+            var props,
+                style = {}
+
+            if (isObject(name)) {
+                style = name;
+            } else {
+                style[name] = value;
+            }
+
+            props = keys(style);
+            each(props, function(name) {
+                el.style[name] = style[name];
+            });
+        },
+
+        addClass = function(el, name) {
+            el.classList.add(name);
+        },
+
+        removeClass = function(el, name) {
+            el.classList.remove(name);
+        },
+
+        addEvent = function(el, name, fn) {
+            el.addEventListener(name, fn, false);
+        },
+
+        removeEvent = function(el, name, fn) {
+            el.removeEventListener(name, fn, false);
+        },
+
+        parseTransform = function(transform) {
+            var value,
+                match;
+
+            if (match = transform.match(/(translate3d\([^\)]+\))|(translateY\([^\)]+\))/)) {
+                if (match[1]) {
+                    value = match[1].split(',')[1];
+                } else {
+                    value = match[2];
+                }
+
+                value = parseFloat(value);
+            } else {
+                value = 0;
+            }
+
+            return value;
+        },
+
+        mapRange = function(length, from, to) {
+            return length * to / from;
+        };
+
+
+    function onTouch(event) {
+        var target = event.targetTouches[0],
+
+            wHeight = parseFloat(getStyle(wrapper, 'height')),
+            sHeight = parseFloat(getStyle(scroller, 'height')),
+
+            offset = target.clientY - touch.clientY + touch.scrollY;
+
+        if (offset > 0) {
+            offset = 0;
+        }
+
+        if (offset < wHeight - sHeight) {
+            offset = wHeight - sHeight;
+        }
+
+        setStyle(scrollbar, transform, 'translate3d(0, ' + mapRange(-offset, sHeight, wHeight) + 'px, 0)');
+        setStyle(scroller, transform, 'translate3d(0, ' + offset + 'px, 0)');
+
+        topbar.innerHTML = offset;
+    }
+
+    function init() {
+        var wHeight = parseFloat(getStyle(wrapper, 'height')),
+            sHeight = parseFloat(getStyle(scroller, 'height'));
+
+        setStyle(scrollbar, 'height', mapRange(wHeight, sHeight, wHeight) + 'px');
+
+        addEvent(wrapper, 'touchstart', function(event) {
+            var target = event.targetTouches[0];
+
+            event.preventDefault();
+
+            touch.touching = true;
+            touch.clientY = target.clientY;
+            touch.scrollY = parseTransform(scroller.style[transform]);
+
+            addClass(scrollbar, 'active');
+            addEvent(wrapper, 'touchmove', onTouch);
+        });
+
+        addEvent(wrapper, 'touchend', function() {
+            touch.touching = false;
+            touch.startpos = null;
+            touch.endpos = null;
+
+            removeClass(scrollbar, 'active');
+            removeEvent(wrapper, 'touchmove', onTouch);
+        });
+
+        addEvent(wrapper, 'touchcancel', function() {
+            touch.touching = false;
+            touch.startpos = null;
+            touch.endpos = null;
+
+            removeClass(scrollbar, 'active');
+            removeEvent(wrapper, 'touchmove', onTouch);
+        });
+    }
+
+    setStyle(wrapper, {
+        position : 'relative',
+        width    : '100%',
+        height   : '100%',
+        overflow : 'hidden'
+    });
+
+    setStyle(scroller, transformStyle, 'preserve-3d');
+    setStyle(scroller, transform, 'translate3d(0,0,0)');
+
+    scrollbar.classList.add('scrollbar');
+    wrapper.appendChild(scrollbar);
+
+    setTimeout(init, 0);
+</script>
+</body>
+</html>
